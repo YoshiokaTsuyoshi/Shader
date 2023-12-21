@@ -14,7 +14,7 @@ Shader "Yoshioka/UvToTexture"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 3.5
+            //#pragma target 3.5
 
             #include "UnityCG.cginc"
 
@@ -44,6 +44,9 @@ Shader "Yoshioka/UvToTexture"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normal);
                 o.uv = v.uv;
+                //fault program
+                //int temp = step(1, abs(o.vertex.x / o.vertex.w)) + step(1, abs(o.vertex.y / o.vertex.w));
+                //o.vertex.xy = temp * (v.uv * 2 - 1) * o.vertex.w + (1 - min(temp, 1)) * o.vertex.xy;
                 return o;
             }
 
@@ -51,7 +54,7 @@ Shader "Yoshioka/UvToTexture"
             {
                 target o;
                 o.display = 1;
-                o.uvtotex = float4(i.uv, 0, 1);
+                o.uvtotex = float4(i.uv, dot(i.normal, _WorldSpaceCameraPos), 1);
                 return o;
             }
             ENDCG
